@@ -1,4 +1,4 @@
-
+import os
 import joblib
 import pandas as pd
 import streamlit as st
@@ -75,10 +75,12 @@ div[data-testid="stFormSubmitButton"] button:hover {
 
 </style>
 """, unsafe_allow_html=True)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PIPELINE_PATH = os.path.join(BASE_DIR, "loan_pipeline.pkl")
 
 @st.cache_resource
 def load_pipeline():
-    return joblib.load("loan_pipeline.pkl")
+    return joblib.load(PIPELINE_PATH)
 
 pipeline = load_pipeline()
 
