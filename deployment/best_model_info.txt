@@ -1,0 +1,13 @@
+Best model: XGBoost
+Model               XGBoost
+Test Accuracy      0.929556
+Test Precision     0.889396
+Test Recall            0.78
+Test F1            0.831113
+Test ROC-AUC       0.975331
+Train Accuracy     0.933583
+Train Precision    0.898876
+Train Recall           0.79
+Train F1           0.840929
+CV F1 (mean)       0.823101
+CV F1 (std)        0.009509
