@@ -2,6 +2,7 @@ import os
 import joblib
 import pandas as pd
 import streamlit as st
+import plotly.express as px
 from Data_prep import add_engineered_features
 
 st.set_page_config(page_title="Loan Approval Predictor", page_icon="💳", layout="centered")
@@ -285,14 +286,12 @@ if submitted:
 
     if prediction == 1:
         st.markdown(
-            f'<div class="result approved">✅ Loan Approved<br>'
-            f'<small>Approval Probability: {probability:.1%}</small></div>',
+            f'<div class="result approved">✅ Loan Approved<br>',
             unsafe_allow_html=True
         )
     else:
         st.markdown(
-            f'<div class="result rejected">❌ Loan Rejected<br>'
-            f'<small>Approval Probability: {probability:.1%}</small></div>',
+            f'<div class="result rejected">❌ Loan Rejected<br>',
             unsafe_allow_html=True
         )
 
@@ -300,5 +299,43 @@ if submitted:
         '<div class="gauge-wrap">' + build_gauge_svg(probability, prediction) + '</div>',
         unsafe_allow_html=True
     )
+
+    st.markdown("#### Prediction Confidence")
+
+    probability_df = pd.DataFrame({
+        "Status": ["Approved", "Rejected"],
+        "Probability": [probability, 1 - probability]
+    })
+    fig = px.bar(
+        probability_df,
+        x="Status",
+        y="Probability",
+        text="Probability",
+        color="Status",
+        color_discrete_map={
+            "Approved": "#22c55e",
+            "Rejected": "#ef4444"
+        }
+    )
+
+    fig.update_traces(
+        texttemplate="%{text:.1%}",
+        textposition="outside"
+    )
+
+    fig.update_layout(
+        yaxis=dict(
+            range=[0, 1],
+            tickformat=".0%"
+        ),
+        xaxis_title=None,
+        yaxis_title="Probability",
+        showlegend=False,
+        height=350,
+        margin=dict(t=30, b=20, l=20, r=20)
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+    
 
     st.caption("This is an automated estimate and not a final banking decision.")
